@@ -3,12 +3,12 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-  register: (req, res) => {
+  register: async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
       return res.status(422).json({ errors: errors.array() });
     try {
-      const { name, email, password } = body;
+      const { name, email, password } = req.body;
       let user = await User.findOne({ email });
     
       if (user) {
@@ -24,10 +24,16 @@ module.exports = {
           res.redirect(301, '/');
         }
       });
-    } catch (error) {
+    } 
+    catch (error) {
       return res.status(500).json({ message: 'Failed', error });
     }
   },
+
+
+
+
+  
   //   register: (req, res, next) => {
   //     const errors = validationResult(req);
   //     if (!errors.isEmpty())
@@ -58,7 +64,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       User.findById(id)
         .then((user) => {
-          if (params.name) user.name = params.name;
+          if (params.name) user.profile.name = params.name;
           if (params.email) user.email = params.email;
           if (params.address) user.address = params.address;
           return user;
@@ -75,7 +81,7 @@ module.exports = {
         .catch((err) => reject(err));
     });
   },
-  updatepassword: (params, id) => {
+  updatePassword: (params, id) => {
     return new Promise((resolve, reject) => {
       User.findById(id)
         .then((user) => {

@@ -18,7 +18,7 @@ const usersRouter = require('./routes/users/usersRoutes');
 const app = express();
 
 mongoose
-  .connect(proces.env.MONGODB_URI, {
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
@@ -37,8 +37,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use(
   session({
     resave: false,
@@ -52,6 +51,9 @@ app.use(
     cookie: { maxAge: 60 * 60 * 1000 }
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
   res.locals.user = req.user;
